@@ -272,9 +272,10 @@ init(#{id:=SrvId, class:=Class, use_master:=UseMaster}=Service) ->
                     State2
             end,
             self() ! nkserver_timed_check_status,
-            pg:create(?MODULE),
+	%% Adapt to new PG module API
+            %%pg:create(?MODULE),
             pg:join(?MODULE, self()),
-            pg:create({?MODULE, SrvId}),
+            %%pg:create({?MODULE, SrvId}),
             pg:join({?MODULE, SrvId}, self()),
             ?LLOG(notice, "service server started (~p, ~p)",
                      [State2#state.worker_sup_pid, self()], State2),
