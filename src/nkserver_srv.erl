@@ -275,7 +275,7 @@ init(#{id:=SrvId, class:=Class, use_master:=UseMaster}=Service) ->
             %%pg:create(?MODULE),
             pg:join(?MODULE, self()),
             %%pg:create({?MODULE, SrvId}),
-            pg:join(SrvId, ?MODULE, self()),
+            %%pg:join(SrvId, ?MODULE, self()),
             ?LLOG(notice, "service server started (~p, ~p)",
                      [State2#state.worker_sup_pid, self()], State2),
             {ok, State3};

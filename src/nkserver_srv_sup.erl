@@ -38,7 +38,7 @@ start_link(PkgClass, SrvId, Opts) ->
                     case nkserver_config:config(Spec, #{}) of
                         {ok, Service} ->
 		    pg:start_link(), 
-		    pg:start(SrvId),
+		    %%pg:start(SrvId),
 		    ChildSpec = {{one_for_one, 10, 60}, get_childs(Service)},
                             supervisor:start_link(?MODULE, {SrvId, ChildSpec});
                         {error, Error} ->
