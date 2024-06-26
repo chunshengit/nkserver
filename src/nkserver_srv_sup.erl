@@ -37,6 +37,8 @@ start_link(PkgClass, SrvId, Opts) ->
                 {ok, Spec} ->
                     case nkserver_config:config(Spec, #{}) of
                         {ok, Service} ->
+			    pg:start_link(),
+			    pg:start(SrvId), 
                             ChildSpec = {{one_for_one, 10, 60}, get_childs(Service)},
                             supervisor:start_link(?MODULE, {SrvId, ChildSpec});
                         {error, Error} ->
@@ -84,8 +86,6 @@ get_childs(Service) ->
 %% Shared for main supervisor and service supervisor
 init({Id, ChildsSpec}) ->
     ets:new(Id, [named_table, public]),
-    pg:start_link(),
-    pg:start(SrvId),
     yes = nklib_proc:register_name({?MODULE, Id}, self()),
     nklib_proc:put(?MODULE, Id),
     {ok, ChildsSpec}.
