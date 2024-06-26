@@ -166,7 +166,7 @@ get_all_local(Class) ->
     [pid()].
 
 get_instances(SrvId) ->
-    pg:get_members({?MODULE, SrvId}).
+    pg:get_members({?MODULE, SrvId}, ?MODULE).
 
 
 %% @doc Gets a random instance in the cluster
@@ -272,11 +272,10 @@ init(#{id:=SrvId, class:=Class, use_master:=UseMaster}=Service) ->
                     State2
             end,
             self() ! nkserver_timed_check_status,
-	%% Adapt to new PG module API
             %%pg:create(?MODULE),
             pg:join(?MODULE, self()),
             %%pg:create({?MODULE, SrvId}),
-            pg:join({?MODULE, SrvId}, self()),
+            pg:join(SrvId, ?MODULE, self()),
             ?LLOG(notice, "service server started (~p, ~p)",
                      [State2#state.worker_sup_pid, self()], State2),
             {ok, State3};
